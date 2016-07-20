@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.epibolyTeam.dao.BaseDao;
+import #class.full#;
+
+/**
+ * #table.desc# 服务 
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+@Service
+public class H#class.name#ServiceImpl implements IH#class.name#Service{
+	
+	@Autowired
+	private BaseDao baseDao;
+	
+	/**
+	 * 查询 #table.desc#
+	 * @param bean #table.desc#
+	 * @throws Exception
+	 */
+	@Override
+	public List<#class.name#> get#class.name#List(java.util.Map<String, Object> map){
+		List<#class.name#> list = baseDao.queryForList("#class.name#.get#class.name#List", map);
+		return list;
+	}
+
+	/**
+	 * 取得 #table.desc#
+	 * @param id 主键ID
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	@Override
+	public #class.name# get#class.name#(Integer id){
+		#class.name# bean = baseDao.queryForObject("#class.name#.get#class.name#", id);
+		return bean;
+	}
+	
+	/**
+	 * 取得 #table.desc#
+	 * @param map 查询参数
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	public #class.name# get#class.name#(java.util.Map<String, Object> map){
+		#class.name# bean = baseDao.queryForObject("#class.name#.get#class.name#ByMap", map);
+		return bean;
+	}
+
+	/**
+	 * 保存 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #class.name#
+	 * @throws Exception
+	 */
+	@Override
+	public #class.name# add#class.name#(#class.name# bean){
+		baseDao.insert("#class.name#.add#class.name#", bean);
+		return bean;
+	}
+	
+	/**
+	 * 更新 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	@Override
+	public #class.name# update#class.name#(#class.name# bean){
+		baseDao.update("#class.name#.update#class.name#", bean);
+		return bean;
+	}
+
+	/**
+	 * 删除 #table.desc#
+	 * @param id 主键ID
+	 * @return
+	 */
+	@Override
+	public Integer delete#class.name#(Integer id){
+		int num = baseDao.delete("#class.name#.delete#class.name#", id);
+		return num;
+	}
+}
+</class>

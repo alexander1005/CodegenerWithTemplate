@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="#class.name#">
+
+	<resultMap id="#class.name#" type="#class.full#">
+#columns.mapping#
+	</resultMap>
+
+	<!-- 页面查询专用 支持$F{}条件规则 返回必须是 map -->
+	<select id="query#class.name#List" resultType="map">
+		select #columns.select#
+		from #table.name#
+		where $F{id}
+	</select>
+	
+	<select id="get#class.name#List" resultMap="#class.name#">
+		select #columns.select#
+		from #table.name#
+		where #id.column#=#{#id.field#}
+	</select>
+	
+	<select id="get#class.name#" resultMap="#class.name#">
+		select #columns.select#
+		from #table.name#
+		where #id.column#=#{#id.field#}
+	</select>
+	
+	<select id="get#class.name#ByMap" resultMap="#class.name#">
+		select #columns.select#
+		from #table.name#
+		where #id.column#=#{#id.field#}
+	</select>
+	
+	<insert id="add#class.name#" parameterType="#class.full#" useGeneratedKeys="true" keyProperty="#id.field#">
+	   insert into #table.name#(#columns.insert#)
+	   values (#fields.insert#)
+	</insert>
+	
+	<update id="update#class.name#" parameterType="#class.full#">
+		update #table.name#
+		set #columns.update#
+		where #id.column# = #{#id.field#}
+	</update>
+	
+	<delete id="delete#class.name#">
+		delete from #table.name# where #id.column# = #{#id.field#}
+	</delete>
+</mapper>

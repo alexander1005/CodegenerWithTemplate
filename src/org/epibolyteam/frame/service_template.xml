@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#;
+
+import java.util.List;
+import #class.full#;
+
+/**
+ * #table.desc# 服务 
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+public interface IH#class.name#Service{
+
+	/**
+	 * 查询 #table.desc#
+	 * @param map 查询参数
+	 * @throws Exception
+	 */
+	List<#class.name#> get#class.name#List(java.util.Map<String, Object> map);
+
+	/**
+	 * 取得 #table.desc#
+	 * @param id 主键ID
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	#class.name# get#class.name#(Integer id);
+	
+	/**
+	 * 取得 #table.desc#
+	 * @param map 查询参数
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	#class.name# get#class.name#(java.util.Map<String, Object> map);
+
+	/**
+	 * 保存 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #class.name#
+	 * @throws Exception
+	 */
+	#class.name# add#class.name#(#class.name# bean);
+	
+	/**
+	 * 更新 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	#class.name# update#class.name#(#class.name# bean);
+
+	/**
+	 * 删除 #table.desc#
+	 * @param id 主键ID
+	 * @return
+	 */
+	Integer delete#class.name#(Integer id);
+}
+</class>
