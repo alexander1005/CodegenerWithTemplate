@@ -79,7 +79,7 @@ public class CodeHelper {
 	private JTextField authorField = new JTextField("author_name");
 	
 	/** 生成代码 */
-	private JButton codeButton = new JButton("========================= Generate code =========================");
+	private JButton codeButton = new JButton("========================== Generate Code ==========================");
 
 	private JTextArea beanText = new JTextArea();
 
@@ -151,6 +151,7 @@ public class CodeHelper {
 		tab.addTab("Service 接口", new JScrollPane(serviceText));
 		tab.addTab("Service 实现", new JScrollPane(serviceImplText));
 		tab.addTab("MyBatis 配置", new JScrollPane(mybatisText));
+		frame.setVisible(true);
 		frame.setSize(700,600);
 		frame.setLayout(new BorderLayout());
 		frame.add(topPanel, BorderLayout.NORTH);
@@ -158,7 +159,6 @@ public class CodeHelper {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 //		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);   // 设置窗体全屏显示
-		frame.setVisible(true);
 		codeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
@@ -190,7 +190,7 @@ public class CodeHelper {
 		label.setPreferredSize(new Dimension(80, 30));
 		tr.add(label);
 		tr.add(c);
-		c.setPreferredSize(new Dimension(600, 30));
+		c.setPreferredSize(new Dimension(579, 30));
 		return tr;
 	}
 
