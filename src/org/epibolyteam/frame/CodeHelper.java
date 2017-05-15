@@ -30,6 +30,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -97,6 +98,8 @@ public class CodeHelper {
 	private JTextArea daoText = new JTextArea();
 
 	private MyBatisType codeTemplateType = MyBatisType.Dao;
+	
+	private Boolean useLombok = true;
 
 	static {
 		// 设置默认字体样式
@@ -186,10 +189,15 @@ public class CodeHelper {
 			}
 		});
 		beanText.setLineWrap(true);// 激活自动换行功能
+		beanText.setTabSize(4);
 		serviceText.setLineWrap(true);// 激活自动换行功能
+		serviceText.setTabSize(4);
 		serviceImplText.setLineWrap(true);// 激活自动换行功能
+		serviceImplText.setTabSize(4);
 		daoText.setLineWrap(true);// 激活自动换行功能
+		daoText.setTabSize(4);
 		mybatisText.setLineWrap(true);// 激活自动换行功能
+		mybatisText.setTabSize(4);
 	}
 
 	/**
@@ -215,6 +223,16 @@ public class CodeHelper {
 		JLabel label = new JLabel(title);
 		label.setPreferredSize(new Dimension(80, 30));
 		tr.add(label);
+		JCheckBox box = new JCheckBox();
+		box.setText("lombok");
+		box.setSelected(true);
+		box.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				useLombok = !useLombok;
+			}
+		});
+		tr.add(box);
 		JRadioButton daoRandioButton = new JRadioButton("Dao");
 		daoRandioButton.setSelected(true);
 		daoRandioButton.addMouseListener(new MouseAdapter() {
@@ -235,7 +253,7 @@ public class CodeHelper {
 		group.add(mapperRandioButton);
 		tr.add(daoRandioButton);
 		tr.add(mapperRandioButton);
-		codeButton.setPreferredSize(new Dimension(438, 30));
+		codeButton.setPreferredSize(new Dimension(356, 30));
 		tr.add(codeButton);
 		return tr;
 	}

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <domain>
-	<class>
+<class>
 /* 
- * CreateDate #now#
+ * CreateDate: #now#
  *
- * Email ：darkidiot@icloud.com 
+ * Email：darkidiot@icloud.com 
  * School：CUIT 
  * Copyright For darkidiot
  */
-package #class.package#.pojo;
+package #class.package#.model;
 
 import java.io.Serializable;
 import lombok.Data;
@@ -22,25 +22,24 @@ import lombok.Data;
 @Data
 public class #class.name# implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
 	#fields#
 }
-	</class>
+</class>
 	
 	<field>
 	/** #field.desc#" */
 	private #field.type# #field.name#;
 	</field>
 
-	<method>
-	/** 取得 #field.desc# */
-	public #field.type# #method.get#() {
-		return #field.name#;
-	}
+<method>
+/** 取得 #field.desc# */
+public #field.type# #method.get#() {
+	return #field.name#;
+}
 
-	/** 设置 #field.desc# */
-	public void #method.set#(#field.type# #field.name#) {
-		this.#field.name# = #field.name#;
-	}
-	</method>
+/** 设置 #field.desc# */
+public void #method.set#(#field.type# #field.name#) {
+	this.#field.name# = #field.name#;
+}
+</method>
 </domain>
