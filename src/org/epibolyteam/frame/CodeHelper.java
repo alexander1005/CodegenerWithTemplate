@@ -566,6 +566,6 @@ public class CodeHelper {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		CodeHelper codeHelper = new CodeHelper();
+		new CodeHelper();
 	}
 }
