@@ -28,11 +28,13 @@ import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -48,49 +50,56 @@ import javax.swing.plaf.FontUIResource;
  * @version 1.0
  */
 public class CodeHelper {
-	
-	/**默认配置文件路径*/
+
+	/** 默认配置文件路径 */
 	private static final String properties = "code-helper.properties";
-	
+
 	private static final String SQL_TEMPLATE = "sql_template.xml";
-	
+
 	private static final String BEAN_TEMPLATE = "bean_template.xml";
-	
+
 	private static final String SERVICE_TEMPLATE = "service_template.xml";
-	
+
 	private static final String SERVICEIMPL_TEMPLATE = "serviceimpl_template.xml";
-	
+
+	private static final String DAO_TEMPLATE = "dao_template.xml";
+
 	private static final String MYBATIS_TEMPLATE = "mybatis_template.xml";
 
-	private JFrame frame = new JFrame("epiboly team code helper");
-	
+	private JFrame frame = new JFrame("darkidiot code helper");
+
 	private JTextField driverField = new JTextField("com.mysql.jdbc.Driver");
 
-	private JTextField urlField = new JTextField("jdbc:mysql://127.0.0.1:3306/db_name?useUnicode=true&characterEncoding=UTF8");
+	private JTextField urlField = new JTextField(
+			"jdbc:mysql://127.0.0.1:3306/db_name?useUnicode=true&characterEncoding=UTF8");
 
 	private JTextField usernameField = new JTextField("username");
 
 	private JTextField passwordField = new JTextField("password");
 
 	private JTextField tableField = new JTextField("table_name");
-	
+
 	private JTextField packageField = new JTextField("package_name");
-	
+
 	private JTextField authorField = new JTextField("author_name");
-	
+
 	/** 生成代码 */
-	private JButton codeButton = new JButton("========================== Generate Code ==========================");
+	private JButton codeButton = new JButton(" Generate Code ");
 
 	private JTextArea beanText = new JTextArea();
 
 	private JTextArea mybatisText = new JTextArea();
-	
+
 	private JTextArea serviceText = new JTextArea();
-	
+
 	private JTextArea serviceImplText = new JTextArea();
 
+	private JTextArea daoText = new JTextArea();
+
+	private MyBatisType codeTemplateType = MyBatisType.Dao;
+
 	static {
-		//设置默认字体样式
+		// 设置默认字体样式
 		FontUIResource fontRes = new FontUIResource(new Font("微软雅黑 Linght", 1, 14));
 		for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {
 			Object key = keys.nextElement();
@@ -100,16 +109,17 @@ public class CodeHelper {
 		}
 	}
 
-	public CodeHelper() throws Exception{
+	public CodeHelper() throws Exception {
 		init();
 		createView();
 	}
-	
+
 	/***
 	 * 初始化
+	 * 
 	 * @throws Exception
 	 */
-	private void init() throws Exception{
+	private void init() throws Exception {
 		Properties p = new Properties();
 		String text = Util.read(properties);
 		p.load(new StringReader(text));
@@ -124,6 +134,7 @@ public class CodeHelper {
 
 	/**
 	 * 创建UI
+	 * 
 	 * @author DarkIdiot
 	 */
 	private void createView() {
@@ -136,9 +147,9 @@ public class CodeHelper {
 		topPanel.add(getField("用户名", usernameField));
 		topPanel.add(getField("密码", passwordField));
 		topPanel.add(getField("数据库表", tableField));
-		topPanel.add(getField("包路径", packageField));
+		topPanel.add(getField("基础路径", packageField));
 		topPanel.add(getField("作者", authorField));
-		topPanel.add(getField("按钮", codeButton));
+		topPanel.add(getFieldSpecial("操作"));
 		topPanel.setPreferredSize(new Dimension(0, 270));
 		mybatisText.setBorder(BorderFactory.createEtchedBorder());
 		beanText.setBorder(BorderFactory.createEtchedBorder());
@@ -147,18 +158,19 @@ public class CodeHelper {
 		JScrollPane beanScroll = new JScrollPane(beanText);
 		final JScrollBar beanScrollBar = beanScroll.getVerticalScrollBar();
 		beanScrollBar.setUnitIncrement(100);
-		tab.addTab("Bean 代码", beanScroll); 
+		tab.addTab("Bean 代码", beanScroll);
 		tab.addTab("Service 接口", new JScrollPane(serviceText));
 		tab.addTab("Service 实现", new JScrollPane(serviceImplText));
+		tab.addTab("Dao 实现", new JScrollPane(daoText));
 		tab.addTab("MyBatis 配置", new JScrollPane(mybatisText));
 		frame.setVisible(true);
-		frame.setSize(700,600);
+		frame.setSize(700, 600);
 		frame.setLayout(new BorderLayout());
 		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(centerPanel, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
-//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);   // 设置窗体全屏显示
+		// frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // 设置窗体全屏显示
 		codeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
@@ -167,18 +179,22 @@ public class CodeHelper {
 				} catch (Exception e) {
 					e.printStackTrace();
 					beanText.setText(Util.getStack(e));
-				}finally{
+				} finally {
 					tab.setSelectedIndex(0);
 					beanScrollBar.setValue(beanScrollBar.getMinimum());
 				}
 			}
 		});
 		beanText.setLineWrap(true);// 激活自动换行功能
+		serviceText.setLineWrap(true);// 激活自动换行功能
+		serviceImplText.setLineWrap(true);// 激活自动换行功能
+		daoText.setLineWrap(true);// 激活自动换行功能
 		mybatisText.setLineWrap(true);// 激活自动换行功能
 	}
 
 	/**
 	 * 取得字段
+	 * 
 	 * @author DarkIdiot
 	 * @param title
 	 * @param c
@@ -194,8 +210,39 @@ public class CodeHelper {
 		return tr;
 	}
 
+	private JPanel getFieldSpecial(String title) {
+		JPanel tr = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JLabel label = new JLabel(title);
+		label.setPreferredSize(new Dimension(80, 30));
+		tr.add(label);
+		JRadioButton daoRandioButton = new JRadioButton("Dao");
+		daoRandioButton.setSelected(true);
+		daoRandioButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				codeTemplateType = MyBatisType.Dao;
+			}
+		});
+		JRadioButton mapperRandioButton = new JRadioButton("Mapper");
+		mapperRandioButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				codeTemplateType = MyBatisType.Mapper;
+			}
+		});
+		ButtonGroup group = new ButtonGroup();
+		group.add(daoRandioButton);
+		group.add(mapperRandioButton);
+		tr.add(daoRandioButton);
+		tr.add(mapperRandioButton);
+		codeButton.setPreferredSize(new Dimension(438, 30));
+		tr.add(codeButton);
+		return tr;
+	}
+
 	/**
 	 * 生成代码
+	 * 
 	 * @author DarkIdiot
 	 */
 	private void createCode() throws Exception {
@@ -207,9 +254,9 @@ public class CodeHelper {
 		p.put("table", tableField.getText());
 		p.put("package", packageField.getText());
 		p.put("author", authorField.getText());
-		String database = Util.matchs(p.getProperty("url"), ":\\d+/(\\w+)", 1).get(0); //匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String database = Util.matchs(p.getProperty("url"), ":\\d+/(\\S+)\\?", 1).get(0); // 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		p.put("database", database);
-		FileWriter writer = new FileWriter(CodeHelper.class.getResource(properties).getFile()); 
+		FileWriter writer = new FileWriter(CodeHelper.class.getResource(properties).getFile());
 		p.store(writer, "");
 		writer.close();
 		List<Column> columns = getColumns(p, tableField.getText());
@@ -220,7 +267,7 @@ public class CodeHelper {
 		serviceImplText.setText("");
 		String packages = p.getProperty("package");
 		String author = p.getProperty("author");
-		if( !columns.isEmpty() ){
+		if (!columns.isEmpty()) {
 			String mybatisCode = getMyBatisCode(table, packages, author, columns);
 			mybatisText.setText(mybatisCode);
 			String domainCode = getBeanCode(table, packages, author, columns);
@@ -229,11 +276,14 @@ public class CodeHelper {
 			serviceText.setText(serviceCode);
 			String serviceImplCode = getServiceImplCode(table, packages, author, columns.get(0));
 			serviceImplText.setText(serviceImplCode);
+			String daoCode = getDaoCode(table, packages, author, columns.get(0));
+			daoText.setText(daoCode);
 		}
 	}
-	
+
 	/**
 	 * 生成MyBatis代码
+	 * 
 	 * @author DarkIdiot
 	 * @param table
 	 * @param pack
@@ -241,14 +291,15 @@ public class CodeHelper {
 	 * @param columns
 	 * @throws Exception
 	 */
-	private String getMyBatisCode(Table table, String pack, String author, List<Column> columns) throws Exception{
+	private String getMyBatisCode(Table table, String pack, String author, List<Column> columns) throws Exception {
 		String template = Util.read(MYBATIS_TEMPLATE);
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("table.name", table.getName());
 		map.put("table.desc", table.getDesc());
 		map.put("class.name", className);
-		map.put("class.full", pack + "." + className);
+		map.put("class.package", pack);
+		map.put("class.full", pack + ".pojo." + className);
 		map.put("author", author);
 		Column idColumn = columns.get(0);
 		map.put("id.column", idColumn.getName());
@@ -258,38 +309,55 @@ public class CodeHelper {
 		List<String> columnsSelect = new ArrayList<String>();
 		List<String> columnsUpdate = new ArrayList<String>();
 		List<String> columnsMapping = new ArrayList<String>();
+		List<String> whereClause = new ArrayList<String>();
+		List<String> batchInsertFields = new ArrayList<String>();
 		for (int i = 0; i < columns.size(); i++) {
 			Column c = columns.get(i);
-			if( i != 0 ){
+			if (i != 0) {
 				insertColumns.add(c.getName());
 				insertFields.add("#{" + c.getField() + "}");
-				columnsUpdate.add(c.getName() + " = #{" + c.getField() + "}");
+				columnsUpdate.add(getIfCluse(c.getName(), c.getField(), ","));
+				whereClause.add(getIfCluse(c.getName(), c.getField(), "and"));
+				batchInsertFields.add("#{item." + c.getField() + "}");
 			}
 			columnsSelect.add(c.getName());
 			columnsMapping.add("		<result property=\"" + c.getField() + "\" column=\"" + c.getName() + "\"/>\n");
 		}
 		map.put("columns.insert", Util.join(insertColumns, ", "));
 		map.put("fields.insert", Util.join(insertFields, ", "));
+		map.put("fields.batchInsert", Util.join(batchInsertFields, ", "));
 		map.put("columns.select", Util.join(columnsSelect, ", "));
-		map.put("columns.update", Util.join(columnsUpdate, ", "));
+		map.put("columns.update", Util.join(columnsUpdate, ""));
 		map.put("columns.mapping", Util.join(columnsMapping, ""));
-		for (Map.Entry<String, String> entry: map.entrySet()) {
+		map.put("where_clause", Util.join(whereClause, ""));
+		for (Map.Entry<String, String> entry : map.entrySet()) {
 			template = template.replace("#" + entry.getKey() + "#", entry.getValue());
 		}
 		return template;
 	}
-	
+
+	/**
+	 * @param name
+	 * @param field
+	 * @return
+	 */
+	private String getIfCluse(String name, String field, String split) {
+		return "\t\t\t<if test=\"" + field + " != null\">\n" + "\t\t\t\t" + split + " " + name + " = #{" + field + "}\n"
+				+ "\t\t\t</if>\n";
+	}
+
 	/**
 	 * 生成实体代码
+	 * 
 	 * @author DarkIdiot
 	 * @param table
 	 * @param pack
 	 * @param columns
 	 * @throws Exception
 	 */
-	private String getBeanCode(Table table, String pack, String author, List<Column> columns) throws Exception{
+	private String getBeanCode(Table table, String pack, String author, List<Column> columns) throws Exception {
 		String xml = Util.read(BEAN_TEMPLATE);
-		String classTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);//匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String classTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		String fieldTemplate = Util.matchs(xml, "<field>([\\w\\W]+?)</field>", 1).get(0);
 		String methodTemplate = Util.matchs(xml, "<method>([\\w\\W]+?)</method>", 1).get(0);
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
@@ -303,7 +371,7 @@ public class CodeHelper {
 			fieldMap.put("field.nullable", String.valueOf(c.isNullable()));
 			fieldMap.put("field.desc", String.valueOf(c.getDesc()));
 			fieldMap.put("field.type", c.getFieldType());
-			for (Map.Entry<String, String> entry: fieldMap.entrySet()) {
+			for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
 				template = template.replace("#" + entry.getKey() + "#", entry.getValue());
 			}
 			fields.append(template);
@@ -317,7 +385,7 @@ public class CodeHelper {
 			fieldMap.put("field.name", c.getField());
 			fieldMap.put("field.desc", Util.isEmpty(c.getDesc()) ? c.getField() : String.valueOf(c.getDesc()));
 			fieldMap.put("field.type", c.getFieldType());
-			for (Map.Entry<String, String> entry: fieldMap.entrySet()) {
+			for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
 				template = template.replace("#" + entry.getKey() + "#", entry.getValue());
 			}
 			methods.append(template);
@@ -327,19 +395,20 @@ public class CodeHelper {
 		classMap.put("table.desc", table.getDesc());
 		classMap.put("class.name", className);
 		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + "." + className);
+		classMap.put("class.full", pack + ".pojo." + className);
 		classMap.put("fields", fields.toString());
 		classMap.put("methods", methods.toString());
 		classMap.put("now", Util.format(new Date()));
 		classMap.put("author", author);
-		for (Map.Entry<String, String> entry: classMap.entrySet()) {
+		for (Map.Entry<String, String> entry : classMap.entrySet()) {
 			classTemplate = classTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
 		}
 		return classTemplate.toString();
 	}
-	
+
 	/**
 	 * 生成Service代码
+	 * 
 	 * @author DarkIdiot
 	 * @param table
 	 * @param pack
@@ -347,118 +416,156 @@ public class CodeHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getServiceCode(Table table, String pack, String author, Column idColumn) throws Exception{
+	private String getServiceCode(Table table, String pack, String author, Column idColumn) throws Exception {
 		String xml = Util.read(SERVICE_TEMPLATE);
-		String serviceTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);//匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String serviceTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
 		Map<String, String> classMap = new LinkedHashMap<String, String>();
 		classMap.put("table.name", table.getName());
 		classMap.put("table.desc", table.getDesc());
 		classMap.put("class.name", className);
 		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + "." + className);
+		classMap.put("class.full", pack + ".pojo." + className);
 		classMap.put("now", Util.format(new Date()));
 		classMap.put("author", author);
-		for (Map.Entry<String, String> entry: classMap.entrySet()) {
-			serviceTemplate = serviceTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
-		}
-		return serviceTemplate.toString();
-	}
-	
-	/**
-	 * 生成ServiceImpl代码
-	 * @author DarkIdiot
-	 * @param table
-	 * @param pack
-	 * @param idColumn
-	 * @return
-	 * @throws Exception
-	 */
-	private String getServiceImplCode(Table table, String pack, String author, Column idColumn) throws Exception{
-		String xml = Util.read(SERVICEIMPL_TEMPLATE);
-		String serviceTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);//匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
-		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
-		Map<String, String> classMap = new LinkedHashMap<String, String>();
-		classMap.put("table.name", table.getName());
-		classMap.put("table.desc", table.getDesc());
-		classMap.put("class.name", className);
-		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + "." + className);
-		classMap.put("now", Util.format(new Date()));
-		classMap.put("author", author);
-		for (Map.Entry<String, String> entry: classMap.entrySet()) {
+		for (Map.Entry<String, String> entry : classMap.entrySet()) {
 			serviceTemplate = serviceTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
 		}
 		return serviceTemplate.toString();
 	}
 
 	/**
-	 * 取得表的数据列
+	 * 生成Dao代码
+	 * 
 	 * @author DarkIdiot
-	 * @param p 参数
-	 * @param tableName 表
+	 * @param table
+	 * @param pack
+	 * @param idColumn
+	 * @return
+	 * @throws Exception
+	 */
+	private String getDaoCode(Table table, String pack, String author, Column idColumn) throws Exception {
+		String xml = Util.read(DAO_TEMPLATE);
+		String daoTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
+		Map<String, String> classMap = new LinkedHashMap<String, String>();
+		classMap.put("table.name", table.getName());
+		classMap.put("table.desc", table.getDesc());
+		classMap.put("class.name", className);
+		classMap.put("class.package", pack);
+		classMap.put("class.full", pack + ".pojo." + className);
+		classMap.put("now", Util.format(new Date()));
+		classMap.put("author", author);
+		for (Map.Entry<String, String> entry : classMap.entrySet()) {
+			daoTemplate = daoTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
+		}
+		return daoTemplate.toString();
+	}
+
+	/**
+	 * 生成ServiceImpl代码
+	 * 
+	 * @author DarkIdiot
+	 * @param table
+	 * @param pack
+	 * @param idColumn
+	 * @return
+	 * @throws Exception
+	 */
+	private String getServiceImplCode(Table table, String pack, String author, Column idColumn) throws Exception {
+		String xml = Util.read(SERVICEIMPL_TEMPLATE);
+		String serviceImplTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
+		Map<String, String> classMap = new LinkedHashMap<String, String>();
+		classMap.put("table.name", table.getName());
+		classMap.put("table.desc", table.getDesc());
+		classMap.put("class.name", className);
+		classMap.put("class.package", pack);
+		classMap.put("class.full", pack + ".pojo." + className);
+		classMap.put("now", Util.format(new Date()));
+		classMap.put("author", author);
+		for (Map.Entry<String, String> entry : classMap.entrySet()) {
+			serviceImplTemplate = serviceImplTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
+		}
+		return serviceImplTemplate.toString();
+	}
+
+	/**
+	 * 取得表的数据列
+	 * 
+	 * @author DarkIdiot
+	 * @param p
+	 *            参数
+	 * @param tableName
+	 *            表
 	 * @return 数据列
 	 * @throws Exception
 	 */
 	private List<Column> getColumns(Properties p, String tableName) throws Exception {
 		String xml = Util.read(SQL_TEMPLATE);
-		String sql = Util.matchs(xml, "<column>([\\w\\W]+?)</column>", 1).get(0);//匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String sql = Util.matchs(xml, "<column>([\\w\\W]+?)</column>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		sql = sql.replace("#table#", tableName);
 		sql = sql.replace("#database#", p.getProperty("database"));
 		Class.forName(p.getProperty("driver"));
-		Connection conn= null;
+		Connection conn = null;
 		ResultSet rs = null;
 		List<Column> rows = new ArrayList<Column>();
 		try {
-			conn = DriverManager.getConnection(p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));
+			conn = DriverManager.getConnection(p.getProperty("url"), p.getProperty("username"),
+					p.getProperty("password"));
 			rs = conn.prepareStatement(sql.toString()).executeQuery();
 			while (rs.next()) {
 				Column col = new Column(rs);
 				rows.add(col);
 			}
-		}finally{
-			if( conn != null )
+		} finally {
+			if (conn != null)
 				conn.close();
 		}
 		return rows;
 	}
-	
+
 	/**
 	 * 取得表信息
+	 * 
 	 * @author DarkIdiot
-	 * @param p 参数
-	 * @param tableName 表名称
+	 * @param p
+	 *            参数
+	 * @param tableName
+	 *            表名称
 	 * @return
 	 * @throws Exception
 	 */
 	private Table getTable(Properties p, String tableName) throws Exception {
 		String xml = Util.read(SQL_TEMPLATE);
-		String sql = Util.matchs(xml, "<table>([\\w\\W]+?)</table>", 1).get(0);//匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		String sql = Util.matchs(xml, "<table>([\\w\\W]+?)</table>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		sql = sql.replace("#table#", tableName);
 		sql = sql.replace("#database#", p.getProperty("database"));
-		Connection conn= null;
+		Connection conn = null;
 		ResultSet rs = null;
 		Table table = new Table(tableName, tableName);
 		try {
 			Class.forName(p.getProperty("driver"));
-			conn = DriverManager.getConnection(p.getProperty("url"), p.getProperty("username"), p.getProperty("password"));
+			conn = DriverManager.getConnection(p.getProperty("url"), p.getProperty("username"),
+					p.getProperty("password"));
 			rs = conn.prepareStatement(sql.toString()).executeQuery();
 			while (rs.next()) {
 				table = new Table(tableName, rs.getString("table_desc"));
 			}
-		}finally{
-			if( conn != null )
+		} finally {
+			if (conn != null)
 				conn.close();
 		}
 		return table;
 	}
-	
+
 	/**
 	 * 启动代码服务
+	 * 
 	 * @param args
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		new CodeHelper();
+		CodeHelper codeHelper = new CodeHelper();
 	}
 }

@@ -1,44 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="#class.name#">
+<mapper namespace="#class.package#.pojo.#class.name#">
 
 	<resultMap id="#class.name#" type="#class.full#">
 #columns.mapping#
 	</resultMap>
 
-	<!-- 页面查询专用 支持$F{}条件规则 返回必须是 map -->
-	<select id="query#class.name#List" resultType="map">
-		select #columns.select#
-		from #table.name#
-		where $F{id}
-	</select>
-	
-	<select id="get#class.name#List" resultMap="#class.name#">
+	<select id="query#class.name#ById" resultType="#class.full#" parameterType="java.Lang.Integer">
 		select #columns.select#
 		from #table.name#
 		where #id.column#=#{#id.field#}
 	</select>
-	
-	<select id="get#class.name#" resultMap="#class.name#">
+
+	<select id="query#class.name#List" resultType="#class.full#" parameterType="java.util.Map">
 		select #columns.select#
 		from #table.name#
-		where #id.column#=#{#id.field#}
+		<where>
+#where_clause#
+		</where>
 	</select>
 	
-	<select id="get#class.name#ByMap" resultMap="#class.name#">
-		select #columns.select#
-		from #table.name#
-		where #id.column#=#{#id.field#}
-	</select>
-	
-	<insert id="add#class.name#" parameterType="#class.full#" useGeneratedKeys="true" keyProperty="#id.field#">
+	<insert id="insert#class.name#" parameterType="#class.full#" useGeneratedKeys="true" keyProperty="#id.field#">
 	   insert into #table.name#(#columns.insert#)
 	   values (#fields.insert#)
 	</insert>
 	
+	<insert id="batchInsert#class.name#" parameterType="java.util.List">
+	   insert into #table.name#(#columns.insert#)
+	   values
+	   <foreach collection="list" item="item" separator=",">
+	   		 (#fields.batchInsert#)
+	   </foreach>
+	</insert>
+	
 	<update id="update#class.name#" parameterType="#class.full#">
 		update #table.name#
-		set #columns.update#
+		<set> 
+#columns.update#
+		</set>
 		where #id.column# = #{#id.field#}
 	</update>
 	

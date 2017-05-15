@@ -70,7 +70,7 @@ public class Column {
 	
 	public String getFieldType(){
 		type = type.toLowerCase();
-		if( type.contains("varchar") || type.contains("text") ){
+		if( type.contains("varchar") || type.contains("text") || type.contains("char") ){
 			return "java.lang.String";
 		}else if(type.equals("int") || type.equals("tinyint") ){
 			return "java.lang.Integer";

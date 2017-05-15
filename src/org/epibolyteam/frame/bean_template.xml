@@ -8,12 +8,10 @@
  * School：CUIT 
  * Copyright For darkidiot
  */
-package #class.package#;
+package #class.package#.pojo;
 
 import java.io.Serializable;
-
-import com.itrip.common.annotation.Column;
-import com.itrip.common.annotation.Table;
+import lombok.Data;
 
 /**
  * #table.desc#
@@ -21,18 +19,16 @@ import com.itrip.common.annotation.Table;
  * @author #author#
  * @version 1.0
  */
-@Table(name = "#table.name#", desc = "#table.desc#")
+@Data
 public class #class.name# implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	#fields#
-	
-	#methods#
 }
 	</class>
 	
 	<field>
-	@Column(name = "#field.col#", length = #field.length#, nullable = #field.nullable#, desc = "#field.desc#")
+	/** #field.desc#" */
 	private #field.type# #field.name#;
 	</field>
 
