@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#.service;
+
+import java.util.List;
+import #class.full#;
+import java.util.Map;
+/**
+ * #table.desc# 服务接口
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+public interface I#class.name#Service{
+
+	/**
+	 * 取得 #table.desc#
+	 * @param id 主键ID
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	#class.name# query#class.name#ById(Long id);
+	
+	/**
+	 * 查询 #table.desc#
+	 * @param map 查询参数
+	 * @return List<#class.name#> #table.desc#
+	 * @throws Exception
+	 */
+	List<#class.name#> query#class.name#List(Map<String, Object> map);
+	
+	/**
+	 * 保存 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #class.name#
+	 * @throws Exception
+	 */
+	Integer insert#class.name#(#class.name# bean);
+	
+	/**
+	 * 批量保存 #table.desc#
+	 * @param List<#class.name#> #table.desc#
+	 * @return Integer
+	 * @throws Exception
+	 */
+	Integer batchInsert#class.name#(List<#class.name#> bean);
+	
+	/**
+	 * 更新 #table.desc#
+	 * @param bean #table.desc#
+	 * @return Integer
+	 * @throws Exception
+	 */
+	Integer update#class.name#ById(#class.name# bean);
+
+	/**
+	 * 删除 #table.desc#
+	 * @param id 主键ID
+	 * @return Integer
+	 */
+	Integer delete#class.name#ById(Long id);
+}
+</class>

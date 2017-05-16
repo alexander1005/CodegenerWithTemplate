@@ -5,7 +5,7 @@
  * School：CUIT 
  * Copyright For darkidiot
  */
-package org.epibolyteam.frame;
+package org.darkidiot.frame;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

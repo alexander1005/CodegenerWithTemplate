@@ -5,7 +5,7 @@
  * School：CUIT 
  * Copyright For darkidiot
  */
-package org.epibolyteam.frame;
+package org.darkidiot.frame;
 
 import java.sql.ResultSet;
 
@@ -71,19 +71,29 @@ public class Column {
 	public String getFieldType(){
 		type = type.toLowerCase();
 		if( type.contains("varchar") || type.contains("text") || type.contains("char") ){
-			return "java.lang.String";
+			return "String";
 		}else if(type.equals("int") || type.equals("tinyint") ){
-			return "java.lang.Integer";
+			return "Integer";
 		}else if(type.contains("bigint") || type.contains("long") || type.contains("number")){
-			return "java.lang.Long";
+			return "Long";
 		}else if(type.contains("double") ){
-			return "java.lang.Double";
+			return "Double";
 		}else if(type.contains("date") || type.contains("time") ){
 			return "java.util.Date";
 		}else if(type.contains("decimal") ){
 			return "java.math.BigDecimal";
 		}
 		return "unknown";
+	}
+	
+	public String getImport(){
+		if(type.contains("date") || type.contains("time") ){
+			return "java.util.Date";
+		}else if(type.contains("decimal") ){
+			return "java.math.BigDecimal";
+		}else {
+			return null;
+		}
 	}
 
 	@Override

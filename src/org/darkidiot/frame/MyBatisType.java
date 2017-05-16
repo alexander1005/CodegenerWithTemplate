@@ -5,7 +5,7 @@
  * School：CUIT 
  * Copyright For darkidiot
  */
-package org.epibolyteam.frame;
+package org.darkidiot.frame;
 /**
  * mybatis类型定义
  * 
@@ -13,5 +13,5 @@ package org.epibolyteam.frame;
  * @version 1.0 
  */
 public enum MyBatisType {
-	Dao,Mapper
+	dao,mapper
 }

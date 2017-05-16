@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import #class.package#.dao.#class.name#Dao;
+import #class.package#.service.I#class.name#Service;
+import #class.package#.pojo.#class.name#;
+
+
+/**
+ * #table.desc# 服务 
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+@Service
+public class #class.name#ServiceImpl implements I#class.name#Service{
+	
+	@Autowired
+	private #class.name#Dao baseDao;
+	
+	/**
+	 * 取得 #table.desc#
+	 * @param id 主键ID
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	@Override
+	public #class.name# query#class.name#ById(Long id){
+		#class.name# bean = baseDao.queryById(id);
+		return bean;
+	}
+	
+	/**
+	 * 查询 #table.desc#
+	 * @param bean #table.desc#
+	 * @throws Exception
+	 */
+	@Override
+	public List<#class.name#> query#class.name#List(Map<String, Object> map){
+		List<#class.name#> list = baseDao.queryList(map);
+		return list;
+	}
+
+	/**
+	 * 保存 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #class.name#
+	 * @throws Exception
+	 */
+	@Override
+	public Integer insert#class.name#(#class.name# bean){
+		Integer ret = baseDao.insert(bean);
+		return ret;
+	}
+	
+	/**
+	 * 批量保存 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #class.name#
+	 * @throws Exception
+	 */
+	@Override
+	public Integer batchInsert#class.name#(List<#class.name#> beanList){
+		Integer ret = baseDao.batchInsert(beanList);
+		return ret;
+	}
+	
+	/**
+	 * 更新 #table.desc#
+	 * @param bean #table.desc#
+	 * @return #table.desc#
+	 * @throws Exception
+	 */
+	@Override
+	public Integer update#class.name#ById(#class.name# bean){
+		Integer  ret = baseDao.update(bean);
+		return ret;
+	}
+
+	/**
+	 * 删除 #table.desc#
+	 * @param id 主键ID
+	 * @return
+	 */
+	@Override
+	public Integer delete#class.name#ById(Long id){
+		Integer ret = baseDao.delete(id);
+		return ret;
+	}
+}
+</class>
