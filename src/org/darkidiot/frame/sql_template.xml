@@ -14,7 +14,9 @@
 				numeric_precision 
 			)as length, 
 			case when is_nullable = 'yes' then true else false end nullable, 
-			column_comment as `desc` 
+			column_comment as `desc`,
+			column_key as `key`,
+			extra as `extra`
 		from information_schema.columns 
 		where table_name = '#table#' 
 		and table_schema='#database#'

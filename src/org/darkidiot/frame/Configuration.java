@@ -37,19 +37,19 @@ public class Configuration {
 	}
 
 	public static String getServiceTemplateLocation() {
-		return String.format(SERVICE_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? lombok_suffix : "");
+		return String.format(SERVICE_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? "" : "");
 	}
 
 	public static String getServiceImplTemplateLocation() {
-		return String.format(SERVICEIMPL_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? lombok_suffix : "");
+		return String.format(SERVICEIMPL_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? "" : "");
 	}
 
 	public static String getDaoTemplateLocation() {
-		return String.format(DAO_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? lombok_suffix : "");
+		return String.format(DAO_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? "" : "");
 	}
 
 	public static String getMybatisTemplateLocation() {
-		return String.format(MYBATIS_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? lombok_suffix : "");
+		return String.format(MYBATIS_TEMPLATE, String.format(prefix, codeTemplateType), useLombok ? "" : "");
 	}
 
 	public static void setCodeTemplateType(MyBatisType codeTemplateType) {

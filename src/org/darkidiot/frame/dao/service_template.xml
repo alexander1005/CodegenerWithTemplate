@@ -10,61 +10,119 @@
 package #class.package#.service;
 
 import java.util.List;
-import #class.full#;
+import #class.package#.model.#class.name#;
 import java.util.Map;
 /**
- * #table.desc# 服务接口
+ * #table.desc#服务接口
  * 
  * @author #author#
  * @version 1.0
  */
-public interface I#class.name#Service{
+public interface #class.name#Service{
 
 	/**
-	 * 取得 #table.desc#
+	 * 依据ID加载 #table.desc#
 	 * @param id 主键ID
-	 * @return #table.desc#
-	 * @throws Exception
+	 * @return #class.name# #table.desc#
 	 */
-	#class.name# query#class.name#ById(Long id);
+	#class.name# load(Long id);
 	
 	/**
-	 * 查询 #table.desc#
-	 * @param map 查询参数
+	 * 依据ID批量加载 #table.desc#
+	 * @param ids 主键ID数组
 	 * @return List<#class.name#> #table.desc#
-	 * @throws Exception
 	 */
-	List<#class.name#> query#class.name#List(Map<String, Object> map);
+	List<#class.name#> loads(List<Long> ids);
+	
+	/**
+	 * 依据criteria查询 #table.desc#
+	 * @param criteria 查询参数
+	 * @return List<#class.name#> #table.desc#
+	 */
+	List<#class.name#> list(Map<String, Object> criteria);
+	
+	/**
+	 * 依据model查询#table.desc#
+	 * @param bean 查询参数
+	 * @return List<#class.name#> #table.desc#
+	 */
+	List<#class.name#> list(#class.name# bean);
+	
+	/**
+	 * 查询全部#table.desc#
+	 * @return List<#class.name#> #table.desc#
+	 */
+	List<#class.name#> listAll();
+	
+	/**
+	 * 依据model查询#table.desc#
+	 * @param bean 查询参数
+	 * @param offset 位移
+	 * @param limit 数据量
+	 * @return List<#class.name#> #table.desc#
+	 */
+	List<#class.name#> pagingRow(#class.name# bean, Integer offset, Integer limit);
+	
+	/**
+	 * 依据model查询#table.desc#总数
+	 * @param bean 查询参数
+	 * @param offset 位移
+	 * @param limit 数据量
+	 * @return Integer 总数
+	 */
+	Integer pagingCount(#class.name# bean);
+	
+	/**
+	 * 依据criteria查询 #table.desc#
+	 * @param criteria 查询参数
+ 	 * @param offset 位移
+	 * @param limit 数据量
+	 * @return List<#class.name#> #table.desc#
+	 */
+	List<#class.name#> pagingRow(Map<String, Object> criteria, Integer offset, Integer limit);
+	
+	/**
+	 * 依据criteria查询 #table.desc#总数
+	 * @param criteria 查询参数
+  	 * @param offset 位移
+	 * @param limit 数据量
+	 * @return Integer 总数
+	 */
+	Integer pagingCount(Map<String, Object> criteria);
 	
 	/**
 	 * 保存 #table.desc#
 	 * @param bean #table.desc#
 	 * @return #class.name#
-	 * @throws Exception
 	 */
-	Integer insert#class.name#(#class.name# bean);
+	Integer create(#class.name# bean);
 	
 	/**
 	 * 批量保存 #table.desc#
 	 * @param List<#class.name#> #table.desc#
 	 * @return Integer
-	 * @throws Exception
 	 */
-	Integer batchInsert#class.name#(List<#class.name#> bean);
+	Integer creates(List<#class.name#> beans);
 	
 	/**
 	 * 更新 #table.desc#
 	 * @param bean #table.desc#
 	 * @return Integer
-	 * @throws Exception
 	 */
-	Integer update#class.name#ById(#class.name# bean);
+	Integer update(#class.name# bean);
 
 	/**
 	 * 删除 #table.desc#
 	 * @param id 主键ID
 	 * @return Integer
 	 */
-	Integer delete#class.name#ById(Long id);
+	Integer delete(Long id);
+	
+	/**
+	 * 批量删除 #table.desc#
+	 * @param id 主键ID
+	 * @return Integer
+	 */
+	Integer deletes(List<Long> ids);
 }
 </class>

@@ -73,7 +73,8 @@ public class CodeHelper {
 
 	private JTextField driverField = new JTextField("com.mysql.jdbc.Driver");
 
-	private JTextField urlField = new JTextField("jdbc:mysql://127.0.0.1:3306/db_name?useUnicode=true&characterEncoding=UTF8");
+	private JTextField urlField = new JTextField(
+			"jdbc:mysql://127.0.0.1:3306/db_name?useUnicode=true&characterEncoding=UTF8");
 
 	private JTextField usernameField = new JTextField("username");
 
@@ -287,11 +288,11 @@ public class CodeHelper {
 			mybatisText.setText(mybatisCode);
 			String domainCode = getBeanCode(table, packages, author, columns);
 			beanText.setText(domainCode);
-			String serviceCode = getServiceCode(table, packages, author, columns.get(0));
+			String serviceCode = getServiceCode(table, packages, author);
 			serviceText.setText(serviceCode);
-			String serviceImplCode = getServiceImplCode(table, packages, author, columns.get(0));
+			String serviceImplCode = getServiceImplCode(table, packages, author);
 			serviceImplText.setText(serviceImplCode);
-			String daoCode = getDaoCode(table, packages, author, columns.get(0));
+			String daoCode = getDaoCode(table, packages, author);
 			daoText.setText(daoCode);
 		}
 	}
@@ -307,58 +308,47 @@ public class CodeHelper {
 	 * @throws Exception
 	 */
 	private String getMyBatisCode(Table table, String pack, String author, List<Column> columns) throws Exception {
-		String template = Util.read(getMybatisTemplateLocation());
+		String xml = Util.read(getMybatisTemplateLocation());
+		StringBuilder sb = new StringBuilder();
+		String headTemplate = Util.matchs(xml, "<head>([\\w\\W]+?)</head>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
+		sb.append(headTemplate);
+
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
+		String mapperTemplate = Util.matchs(xml, "(<mapper[\\w\\W]+?</mapper>)", 1).get(0);
+		String resultTemplate = Util.matchs(xml, "<resultEntry>([\\w\\W]+?)</resultEntry>", 1).get(0);
+		String ifTemplate = Util.matchs(xml, "<ifEntry>([\\w\\W]+?)</ifEntry>", 1).get(0);
+		String valueTemplate = Util.matchs(xml, "<valueEntry>([\\w\\W]+?)</valueEntry>", 1).get(0);
+		StringBuilder mappings = new StringBuilder();
+		for (int i = 0; i < columns.size(); i++) {
+			Column c = columns.get(i);
+			String template = resultTemplate.replaceAll("class.package", table.getName()).replaceAll("class.name",
+					className);
+			Map<String, String> fieldMap = new LinkedHashMap<String, String>();
+			fieldMap.put("EntryValue", c.getName());
+			fieldMap.put("EntryKey", c.getField());
+			fieldMap.put("Entry", c.IsPrikey() ? "id" : "result");
+			for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
+				template = template.replace("#" + entry.getKey() + "#", entry.getValue());
+			}
+			mappings.append(template + (i + 1 == columns.size() ? "" : "\n\t\t"));
+		}
+
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("table.name", table.getName());
 		map.put("table.desc", table.getDesc());
 		map.put("class.name", className);
 		map.put("class.package", pack);
-		map.put("class.full", pack + ".pojo." + className);
 		map.put("author", author);
-		Column idColumn = columns.get(0);
-		map.put("id.column", idColumn.getName());
-		map.put("id.field", idColumn.getField());
-		List<String> insertFields = new ArrayList<String>();
-		List<String> insertColumns = new ArrayList<String>();
-		List<String> columnsSelect = new ArrayList<String>();
-		List<String> columnsUpdate = new ArrayList<String>();
-		List<String> columnsMapping = new ArrayList<String>();
-		List<String> whereClause = new ArrayList<String>();
-		List<String> batchInsertFields = new ArrayList<String>();
-		for (int i = 0; i < columns.size(); i++) {
-			Column c = columns.get(i);
-			if (i != 0) {
-				insertColumns.add(c.getName());
-				insertFields.add("#{" + c.getField() + "}");
-				columnsUpdate.add(getIfCluse(c.getName(), c.getField(), ","));
-				whereClause.add(getIfCluse(c.getName(), c.getField(), "and"));
-				batchInsertFields.add("#{item." + c.getField() + "}");
-			}
-			columnsSelect.add(c.getName());
-			columnsMapping.add("		<result property=\"" + c.getField() + "\" column=\"" + c.getName() + "\"/>\n");
-		}
-		map.put("columns.insert", Util.join(insertColumns, ", "));
-		map.put("fields.insert", Util.join(insertFields, ", "));
-		map.put("fields.batchInsert", Util.join(batchInsertFields, ", "));
-		map.put("columns.select", Util.join(columnsSelect, ", "));
-		map.put("columns.update", Util.join(columnsUpdate, ""));
-		map.put("columns.mapping", Util.join(columnsMapping, ""));
-		map.put("where_clause", Util.join(whereClause, ""));
-		for (Map.Entry<String, String> entry : map.entrySet()) {
-			template = template.replace("#" + entry.getKey() + "#", entry.getValue());
-		}
-		return template;
-	}
+		map.put("columns.mapping", mappings.toString());
+		map.put("id", "");
+		map.put("cols", "");
+		map.put("vals", "");
 
-	/**
-	 * @param name
-	 * @param field
-	 * @return
-	 */
-	private String getIfCluse(String name, String field, String split) {
-		return "\t\t\t<if test=\"" + field + " != null\">\n" + "\t\t\t\t" + split + " " + name + " = #{" + field + "}\n"
-				+ "\t\t\t</if>\n";
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			mapperTemplate = mapperTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
+		}
+		sb.append(mapperTemplate);
+		return sb.toString();
 	}
 
 	/**
@@ -405,7 +395,7 @@ public class CodeHelper {
 		for (String field : fieldSet) {
 			String template = importTemplate;
 			template = template.replace("#import#", field);
-			imports.append(template);
+			imports.append(template + "\n");
 		}
 
 		StringBuilder methods = new StringBuilder();
@@ -428,7 +418,6 @@ public class CodeHelper {
 		classMap.put("table.desc", table.getDesc());
 		classMap.put("class.name", className);
 		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + ".pojo." + className);
 		classMap.put("fields", fields.toString());
 		classMap.put("methods", methods.toString());
 		classMap.put("now", Util.format(new Date()));
@@ -447,11 +436,10 @@ public class CodeHelper {
 	 * @author DarkIdiot
 	 * @param table
 	 * @param pack
-	 * @param idColumn
 	 * @return
 	 * @throws Exception
 	 */
-	private String getServiceCode(Table table, String pack, String author, Column idColumn) throws Exception {
+	private String getServiceCode(Table table, String pack, String author) throws Exception {
 		String xml = Util.read(getServiceTemplateLocation());
 		String serviceTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
@@ -460,7 +448,6 @@ public class CodeHelper {
 		classMap.put("table.desc", table.getDesc());
 		classMap.put("class.name", className);
 		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + ".pojo." + className);
 		classMap.put("now", Util.format(new Date()));
 		classMap.put("author", author);
 		for (Map.Entry<String, String> entry : classMap.entrySet()) {
@@ -479,7 +466,7 @@ public class CodeHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getDaoCode(Table table, String pack, String author, Column idColumn) throws Exception {
+	private String getDaoCode(Table table, String pack, String author) throws Exception {
 		String xml = Util.read(getDaoTemplateLocation());
 		String daoTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
@@ -488,7 +475,6 @@ public class CodeHelper {
 		classMap.put("table.desc", table.getDesc());
 		classMap.put("class.name", className);
 		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + ".pojo." + className);
 		classMap.put("now", Util.format(new Date()));
 		classMap.put("author", author);
 		for (Map.Entry<String, String> entry : classMap.entrySet()) {
@@ -507,7 +493,7 @@ public class CodeHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	private String getServiceImplCode(Table table, String pack, String author, Column idColumn) throws Exception {
+	private String getServiceImplCode(Table table, String pack, String author) throws Exception {
 		String xml = Util.read(getServiceImplTemplateLocation());
 		String serviceImplTemplate = Util.matchs(xml, "<class>([\\w\\W]+?)</class>", 1).get(0);// 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		String className = Util.firstCharUpperCase(Util.toFieldName(table.getName()));
@@ -516,7 +502,6 @@ public class CodeHelper {
 		classMap.put("table.desc", table.getDesc());
 		classMap.put("class.name", className);
 		classMap.put("class.package", pack);
-		classMap.put("class.full", pack + ".pojo." + className);
 		classMap.put("now", Util.format(new Date()));
 		classMap.put("author", author);
 		for (Map.Entry<String, String> entry : classMap.entrySet()) {

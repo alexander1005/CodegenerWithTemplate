@@ -1,47 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<head>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="#class.package#.pojo.#class.name#">
-
-	<resultMap id="#class.name#" type="#class.full#">
-#columns.mapping#
+</head>
+<mapper namespace="#class.package#.model.#class.name#">
+	<resultMap id="BaseResultMap" type="#class.package#.model.#class.name#">
+		#columns.mapping#
 	</resultMap>
 
-	<select id="query#class.name#ById" resultType="#class.full#" parameterType="java.Lang.Integer">
-		select #columns.select#
-		from #table.name#
-		where #id.column#=#{#id.field#}
-	</select>
+	<sql id="tb">
+	    #table.name#
+	</sql>
 
-	<select id="query#class.name#List" resultType="#class.full#" parameterType="java.util.Map">
-		select #columns.select#
-		from #table.name#
-		<where>
-#where_clause#
-		</where>
-	</select>
-	
-	<insert id="insert#class.name#" parameterType="#class.full#" useGeneratedKeys="true" keyProperty="#id.field#">
-	   insert into #table.name#(#columns.insert#)
-	   values (#fields.insert#)
-	</insert>
-	
-	<insert id="batchInsert#class.name#" parameterType="java.util.List">
-	   insert into #table.name#(#columns.insert#)
-	   values
-	   <foreach collection="list" item="item" separator=",">
-	   		 (#fields.batchInsert#)
-	   </foreach>
-	</insert>
-	
-	<update id="update#class.name#" parameterType="#class.full#">
-		update #table.name#
-		<set> 
-#columns.update#
-		</set>
-		where #id.column# = #{#id.field#}
-	</update>
-	
-	<delete id="delete#class.name#">
-		delete from #table.name# where #id.column# = #{#id.field#}
-	</delete>
+	<sql id="cols_all">
+	    #id#,<include refid="cols_exclude_id"/>
+	</sql>
+
+	<sql id="cols_exclude_id">
+	  #cols#
+	</sql>
+
+	<sql id="vals">
+	   #vals#
+	</sql>
 </mapper>
+
+	<resultEntry><#Entry# property="#EntryValue#" column="#EntryKey#"/></resultEntry>
+	
+	<ifEntry>	
+		<if test= #EntryValue# != null">
+			#joiner# EntryKey = #{EntryValue}
+		</if>
+	</ifEntry>
+	
+	<valueEntry>
+		#joiner# #{#value#}
+	</valueEntry>

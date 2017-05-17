@@ -9,11 +9,16 @@
  */
 package #class.package#.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import #class.full#;
+
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
+
+import #class.package#.model.#class.name#;
+
 /**
  * #table.desc# Dao服务
  * 
@@ -23,66 +28,70 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class #class.name#Dao extends SqlSessionDaoSupport{
 
-	/**
-	 * 取得 #table.desc#
-	 * @param id 主键ID
-	 * @return #table.desc#
-	 */
-	public #class.name# queryById(Long id){
-		#class.name# bean =  this.getSqlSession().selectOne("#class.package#.pojo.#class.name#.query#class.name#ById", id);
-		return bean;
+	public #class.name# load(Long id){
+		return this.getSqlSession().selectOne(getNamespace()+"load", id);
 	}
 	
-	/**
-	 * 查询 #table.desc#
-	 * @param bean #table.desc#
-	 */
-	public List<#class.name#> queryList(Map<String, Object> map){
-		List<#class.name#> list =  this.getSqlSession().selectList("#class.package#.pojo.#class.name#.query#class.name#List", map);
-		return list;
+	public List<#class.name#> loads(List<Long> ids) {
+		return this.getSqlSession().selectList(getNamespace()+".loads", ids);
 	}
 	
-	/**
-	 * 保存 #table.desc#
-	 * @param bean #table.desc#
-	 * @return #class.name#
-	 */
-	public Integer insert(#class.name# bean){
-		Integer ret = this.getSqlSession().insert("#class.package#.pojo.#class.name#.insert#class.name#", bean);
-		return ret;
+	public List<#class.name#> list(Map<String, ?> criteria) {
+		return this.getSqlSession().selectList(getNamespace()+".list", criteria);
 	}
 
-	/**
-	 * 批量保存 #table.desc#
-	 * @param bean #table.desc#
-	 * @return #class.name#
-	 * @throws Exception
-	 */
-	public Integer batchInsert(List<#class.name#> beanList){
-		Integer ret = this.getSqlSession().insert("#class.package#.pojo.#class.name#.batchInsert#class.name#", beanList);
-		return ret;
+	public List<#class.name#> list(SupermanOuterSeller bean) {
+		return this.getSqlSession().selectList(getNamespace()+".list", bean);
+	}
+
+	public List<#class.name#> listAll() {
+		return this.getSqlSession().selectList(getNamespace()+".listAll");
+	}
+
+	public List<#class.name#> pagingRow(#class.name# bean, Integer offset, Integer limit) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		criteria.put("offset", offset);
+		criteria.put("limit", limit);
+		return this.getSqlSession().selectList(getNamespace() + ".pagingRow", criteria);
+	}
+
+	public Integer pagingCount(#class.name# bean) {
+		return this.getSqlSession().selectOne(getNamespace() + ".pagingCount", bean);
+	}
+
+	public List<#class.name#> pagingRow(Map<String, Object> criteria, Integer offset, Integer limit) {
+		criteria.put("offset", offset);
+		criteria.put("limit", limit);
+		return this.getSqlSession().selectList(getNamespace() + ".pagingRow", criteria);
+	}
+
+	public Integer pagingCount(Map<String, Object> criteria) {
+		return this.getSqlSession().selectOne(getNamespace() + ".pagingCount", criteria);
 	}
 	
+	public Integer create(#class.name# bean){
+		return this.getSqlSession().insert(getNamespace()+".create", bean);
+	}
+
+	public Integer creates(List<#class.name#> beanList){
+		return this.getSqlSession().insert(getNamespace()+".creates", beanList);
+	}
 	
-	/**
-	 * 更新 #table.desc#
-	 * @param bean #table.desc#
-	 * @return #table.desc#
-	 * @throws Exception
-	 */
 	public Integer update(#class.name# bean){
-		Integer ret = this.getSqlSession().update("#class.package#.pojo.#class.name#.update#class.name#", bean);
-		return ret;
+		return this.getSqlSession().update(getNamespace()+".update", bean);
 	}
 
-	/**
-	 * 删除 #table.desc#
-	 * @param id 主键ID
-	 * @return
-	 */
 	public Integer delete(Long id){
-		Integer ret = this.getSqlSession().delete("#class.package#.pojo.#class.name#.delete#class.name#", id);
-		return ret;
+		return this.getSqlSession().delete(getNamespace()+".delete", id);
+	}
+	
+	public Integer deletes(List<Long> ids) {
+		return this.getSqlSession().delete(getNamespace()+".deletes", ids);
+	}
+	
+	private String getNamespace() {
+		return "#class.package#.model.#class.name#"+".";
 	}
 }
 </class>
