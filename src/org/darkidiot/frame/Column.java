@@ -93,9 +93,9 @@ public class Column {
 		} else if (type.contains("double")) {
 			return "Double";
 		} else if (type.contains("date") || type.contains("time")) {
-			return "java.util.Date";
+			return "Date";
 		} else if (type.contains("decimal")) {
-			return "java.math.BigDecimal";
+			return "BigDecimal";
 		}
 		return "unknown";
 	}

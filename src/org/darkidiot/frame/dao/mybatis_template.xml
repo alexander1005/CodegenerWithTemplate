@@ -9,30 +9,126 @@
 	</resultMap>
 
 	<sql id="tb">
-	    #table.name#
+		#table.name#
 	</sql>
 
 	<sql id="cols_all">
-	    #id#,<include refid="cols_exclude_id"/>
+		#id#, <include refid="cols_exclude_id" />
 	</sql>
 
 	<sql id="cols_exclude_id">
-	  #cols#
+		#col#
 	</sql>
 
-	<sql id="vals">
-	   #vals#
+	<sql id="vals_all">
+		#idVal#, <include refid="vals_exclude_id" />
 	</sql>
+
+	<sql id="vals_exclude_id">
+		#val#
+	</sql>
+	
+	<sql id="normal_query_conditions">
+		#andIfEntrys#
+	</sql>
+
+	<select id="load" parameterType="long" resultMap="BaseResultMap">
+		SELECT
+		<include refid="cols_all" />
+		FROM
+		<include refid="tb" />
+		WHERE #id# = #idVal#
+	</select>
+	
+	<select id="loads" parameterType="java.util.List" resultMap="BaseResultMap">
+		SELECT
+		<include refid="cols_all" />
+		FROM
+		<include refid="tb" /> WHERE #id# in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="cols_all" />
+		FROM
+		<include refid="tb" />
+		<where>
+			<include refid="normal_query_conditions" />
+		</where> 
+	</select>
+	
+	<select id="listAll" resultMap="BaseResultMap">
+		SELECT
+		<include refid="cols_all" />
+		FROM
+		<include refid="tb" />
+	</select>
+	
+	<select id="pagingRow" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="cols_all" />
+		FROM
+		<include refid="tb" />
+		<where>
+			<include refid="normal_query_conditions" />
+		</where>
+		LIMIT #{offset},#{limit}
+	</select>
+	
+	<select id="pagingCount" parameterType="java.util.Map" resultMap="java.lang.Integer">
+		SELECT
+			count(*)
+		FROM
+		<include refid="tb" />
+		<where>
+			<include refid="normal_query_conditions" />
+		</where>
+	</select>
+	
+	<insert id="create" parameterType="#class.package#.model.#class.name#" #useuseGeneratedKey#>
+	    INSERT INTO 
+	    <include refid="tb" /> (<include refid="cols_all"/>)
+	    VALUES(<include refid="vals_all"/>)
+	</insert>
+	
+	<insert id="creates" parameterType="java.util.List" #useuseGeneratedKey#>
+	    INSERT INTO 
+	    <include refid="tb" /> (<include refid="cols_all"/>)
+	    VALUES
+		<foreach collection="list" item="item" separator=",">
+			(#itemValsAll#)
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="#class.package#.model.#class.name#">
+	    UPDATE <include refid="tb" />
+	    <set>
+	    	#commaIfEntrys#
+	    </set>
+	    WHERE #id# = #idVal#
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		DELETE FROM <include refid="tb" />
+		WHERE #id# = #idVal#
+	</delete>
+	
+	<delete id="deletes" parameterType="java.util.List">
+		DELETE FROM <include refid="tb" />
+		WHERE  #id# in
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
 </mapper>
 
-	<resultEntry><#Entry# property="#EntryValue#" column="#EntryKey#"/></resultEntry>
-	
-	<ifEntry>	
-		<if test= #EntryValue# != null">
-			#joiner# EntryKey = #{EntryValue}
-		</if>
-	</ifEntry>
-	
-	<valueEntry>
-		#joiner# #{#value#}
-	</valueEntry>
+<resultEntry><#Entry# property="#EntryValue#" column="#EntryKey#"/></resultEntry>
+		
+<ifEntry><if test=#EntryValue# != null "> #preJoiner# #EntryKey# = #{#EntryValue#} #sufJoiner#</if></ifEntry>
+
+<useuseGeneratedKeys>useGeneratedKeys="true" keyProperty="#id#"</useuseGeneratedKeys>
+
+<valueEntry>#{#value#}</valueEntry>

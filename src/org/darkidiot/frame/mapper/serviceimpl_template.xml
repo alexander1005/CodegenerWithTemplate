@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import #class.package#.dao.#class.name#Dao;
+import #class.package#.service.#class.name#Service;
+import #class.package#.model.#class.name#;
+
+
+/**
+ * #table.desc# 服务实现 
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+@Service
+public class #class.name#ServiceImpl implements #class.name#Service{
+	
+	@Autowired
+	private #class.name#Dao baseDao;
+	
+	@Override
+	public #class.name# load(Long id){
+		return baseDao.load(id);
+		 
+	}
+	
+	@Override
+	public List<#class.name#> loads(List<Long> ids) {
+		return baseDao.loads(ids);
+	}
+
+	@Override
+	public List<#class.name#> list(Map<String, Object> criteria) {
+		return baseDao.list(criteria);
+	}
+
+	@Override
+	public List<#class.name#> list(#class.name# bean) {
+		return baseDao.list(bean);
+	}
+	
+	@Override
+	public List<#class.name#> listAll() {
+		return baseDao.listAll();
+	}
+	
+	@Override
+	public List<#class.name#> pagingRow(#class.name# bean, Integer offset, Integer limit) {
+		return baseDao.pagingRow(bean, offset, limit);
+	}
+
+	@Override
+	public Integer pagingCount(#class.name# bean) {
+		return baseDao.pagingCount(bean);
+	}
+
+	@Override
+	public List<#class.name#> pagingRow(Map<String, Object> criteria, Integer offset, Integer limit) {
+		return baseDao.pagingRow(criteria, offset, limit);
+	}
+
+	@Override
+	public Integer pagingCount(Map<String, Object> criteria) {
+		return baseDao.pagingCount(criteria);
+	}
+	
+	@Override
+	public Integer create(#class.name# bean) {
+		return baseDao.create(bean);
+	}
+
+	@Override
+	public Integer creates(List<#class.name#> beans) {
+		return baseDao.creates(beans);
+	}
+
+	@Override
+	public Integer update(#class.name# bean) {
+		return baseDao.update(bean);
+	}
+
+	@Override
+	public Integer delete(Long id) {
+		return baseDao.delete(id);
+	}
+
+	@Override
+	public Integer deletes(List<Long> ids) {
+		return baseDao.deletes(ids);
+	}
+}
+</class>

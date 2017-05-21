@@ -318,10 +318,27 @@ public class CodeHelper {
 		String resultTemplate = Util.matchs(xml, "<resultEntry>([\\w\\W]+?)</resultEntry>", 1).get(0);
 		String ifTemplate = Util.matchs(xml, "<ifEntry>([\\w\\W]+?)</ifEntry>", 1).get(0);
 		String valueTemplate = Util.matchs(xml, "<valueEntry>([\\w\\W]+?)</valueEntry>", 1).get(0);
-		StringBuilder mappings = new StringBuilder();
+		String useuseGeneratedKeyTemplate = Util.matchs(xml, "<useuseGeneratedKeys>([\\w\\W]+?)</useuseGeneratedKeys>", 1).get(0);
+		List<String> excludeIdCols = new ArrayList<String>();
+		List<String> idCols = new ArrayList<String>();
+		List<String> excludeIdVals = new ArrayList<String>();
+		List<String> idVals = new ArrayList<String>();
+		List<String> mappings = new ArrayList<String>();
+		List<String> itemValsAll = new ArrayList<String>();
+		StringBuilder useuseGeneratedKeys = new StringBuilder();
 		for (int i = 0; i < columns.size(); i++) {
 			Column c = columns.get(i);
-			String template = resultTemplate.replaceAll("class.package", table.getName()).replaceAll("class.name",
+			if (c.IsPrikey()) {
+				idCols.add(c.getField());
+				idVals.add(valueTemplate.replace("#value#", c.getName()));
+				if (c.IsAutoIncrement()) {
+					useuseGeneratedKeys.append(useuseGeneratedKeyTemplate.replace("#" + "id" + "#", c.getField()));
+				}
+			} else {
+				excludeIdCols.add(c.getField());
+				excludeIdVals.add(valueTemplate.replace("#value#", c.getName()));
+			}
+			String template = resultTemplate.replace("#class.package#", table.getName()).replaceAll("#class.name#",
 					className);
 			Map<String, String> fieldMap = new LinkedHashMap<String, String>();
 			fieldMap.put("EntryValue", c.getName());
@@ -330,7 +347,32 @@ public class CodeHelper {
 			for (Map.Entry<String, String> entry : fieldMap.entrySet()) {
 				template = template.replace("#" + entry.getKey() + "#", entry.getValue());
 			}
-			mappings.append(template + (i + 1 == columns.size() ? "" : "\n\t\t"));
+			mappings.add(template);
+		}
+		itemValsAll.addAll(idVals);
+		itemValsAll.addAll(excludeIdVals);
+		List<String> andIfEntrys = new ArrayList<String>();
+		List<String> commaIfEntrys = new ArrayList<String>();
+		for (Column c : columns) {
+			Map<String, String> map = new LinkedHashMap<String, String>();
+			map.put("EntryValue", c.getField());
+			map.put("EntryKey", c.getName());
+			map.put("preJoiner", "and");
+			map.put("sufJoiner", "");
+			String template = ifTemplate;
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				template = template.replace("#" + entry.getKey() + "#", entry.getValue());
+			}
+			andIfEntrys.add(template);
+			if (!c.IsPrikey()) {
+				map.put("preJoiner", "");
+				map.put("sufJoiner", " ,");
+				template = ifTemplate;
+				for (Map.Entry<String, String> entry : map.entrySet()) {
+					template = template.replace("#" + entry.getKey() + "#", entry.getValue());
+				}
+				commaIfEntrys.add(template);
+			}
 		}
 
 		Map<String, String> map = new LinkedHashMap<String, String>();
@@ -339,10 +381,15 @@ public class CodeHelper {
 		map.put("class.name", className);
 		map.put("class.package", pack);
 		map.put("author", author);
-		map.put("columns.mapping", mappings.toString());
-		map.put("id", "");
-		map.put("cols", "");
-		map.put("vals", "");
+		map.put("columns.mapping", Util.join(mappings, "\n\t\t"));
+		map.put("id", Util.join(idCols, ", "));
+		map.put("col", Util.join(excludeIdCols, ", "));
+		map.put("idVal", Util.join(idVals, ", "));
+		map.put("val", Util.join(excludeIdVals, ", "));
+		map.put("itemValsAll", Util.join(itemValsAll, ", "));
+		map.put("andIfEntrys", Util.join(andIfEntrys, "\n\t\t"));
+		map.put("commaIfEntrys", Util.join(commaIfEntrys, "\n\t\t"));
+		map.put("useuseGeneratedKey", useuseGeneratedKeys.toString());
 
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 			mapperTemplate = mapperTemplate.replace("#" + entry.getKey() + "#", entry.getValue());
