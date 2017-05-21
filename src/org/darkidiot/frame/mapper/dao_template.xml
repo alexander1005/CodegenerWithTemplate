@@ -36,12 +36,14 @@ public class #class.name#Dao extends SqlSessionDaoSupport{
 		return this.getSqlSession().selectList(getNamespace()+".loads", ids);
 	}
 	
-	public List<#class.name#> list(Map<String, ?> criteria) {
+	public List<#class.name#> list(Map<String, Object> criteria) {
 		return this.getSqlSession().selectList(getNamespace()+".list", criteria);
 	}
 
 	public List<#class.name#> list(SupermanOuterSeller bean) {
-		return this.getSqlSession().selectList(getNamespace()+".list", bean);
+		Map<String,Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return this.list(criteria);
 	}
 
 	public List<#class.name#> listAll() {
@@ -51,13 +53,13 @@ public class #class.name#Dao extends SqlSessionDaoSupport{
 	public List<#class.name#> pagingRow(#class.name# bean, Integer offset, Integer limit) {
 		Map<String, Object> criteria = new HashMap<String, Object>();
 		BeanUtils.copyProperties(bean, criteria);
-		criteria.put("offset", offset);
-		criteria.put("limit", limit);
-		return this.getSqlSession().selectList(getNamespace() + ".pagingRow", criteria);
+		return this.pagingRow(criteria, offset, limit);
 	}
 
 	public Integer pagingCount(#class.name# bean) {
-		return this.getSqlSession().selectOne(getNamespace() + ".pagingCount", bean);
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return this.pagingCount(criteria);
 	}
 
 	public List<#class.name#> pagingRow(Map<String, Object> criteria, Integer offset, Integer limit) {
