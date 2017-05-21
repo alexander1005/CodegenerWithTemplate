@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import #class.package#.model.#class.name#;
 
 /**
- * #table.desc# Dao服务
+ * #table.desc# Mapper服务
  * 
  * @author #author#
  * @version 1.0
@@ -25,9 +26,9 @@ import #class.package#.model.#class.name#;
 @Mapper
 public interface #class.name#Mapper{
 
-	#class.name# load(Long id);
+	#class.name# load(@Param("id")Long id);
 	
-	List<#class.name#> loads(List<Long> ids);
+	List<#class.name#> loads(@Param("ids")List<Long> ids);
 	
 	List<#class.name#> list(Map<String, Object> criteria);
 
@@ -43,8 +44,8 @@ public interface #class.name#Mapper{
 	
 	Integer update(#class.name# bean);
 
-	Integer delete(Long id);
+	Integer delete(@Param("id")Long id);
 	
-	Integer deletes(List<Long> ids);
+	Integer deletes(@Param("ids")List<Long> ids);
 }
 </class>

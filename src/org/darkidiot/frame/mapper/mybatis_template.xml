@@ -3,7 +3,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 </head>
-<mapper namespace="#class.package#.model.#class.name#">
+<mapper namespace="#class.package#.mapper.#class.name#Mapper">
 	<resultMap id="BaseResultMap" type="#class.package#.model.#class.name#">
 		#columns.mapping#
 	</resultMap>
@@ -37,7 +37,7 @@
 		<include refid="cols_all" />
 		FROM
 		<include refid="tb" />
-		WHERE #id# = #idVal#
+		WHERE #id# = #{id}
 	</select>
 	
 	<select id="loads" parameterType="java.util.List" resultMap="BaseResultMap">
@@ -45,7 +45,7 @@
 		<include refid="cols_all" />
 		FROM
 		<include refid="tb" /> WHERE #id# in
-		<foreach collection="list" item="item" open="(" separator="," close=")">
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
@@ -113,13 +113,13 @@
 	
 	<delete id="delete" parameterType="long">
 		DELETE FROM <include refid="tb" />
-		WHERE #id# = #idVal#
+		WHERE #id# = #{id}
 	</delete>
 	
 	<delete id="deletes" parameterType="java.util.List">
 		DELETE FROM <include refid="tb" />
 		WHERE  #id# in
-		<foreach collection="list" item="item" open="(" separator="," close=")">
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>
