@@ -127,7 +127,7 @@
 
 <resultEntry><#Entry# property="#EntryValue#" column="#EntryKey#"/></resultEntry>
 		
-<ifEntry><if test=#EntryValue# != null "> #preJoiner# #EntryKey# = #{#EntryValue#} #sufJoiner#</if></ifEntry>
+<ifEntry><if test="#EntryValue# != null"> #preJoiner# #EntryKey# = #{#EntryValue#} #sufJoiner#</if></ifEntry>
 
 <useuseGeneratedKeys>useGeneratedKeys="true" keyProperty="#id#"</useuseGeneratedKeys>
 
