@@ -20,7 +20,7 @@ public class Configuration {
 	private static Boolean useLombok = true;
 
 	private static final String lombok_suffix = "_lombok";
-	private static final String prefix = "./%s/";
+	private static final String prefix = "%s/";
 
 	private static final String BEAN_TEMPLATE = "%sbean%s_template.xml";
 

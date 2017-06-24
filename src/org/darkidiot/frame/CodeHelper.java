@@ -22,6 +22,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.StringReader;
 import java.sql.Connection;
@@ -66,6 +67,7 @@ public class CodeHelper {
 
 	/** 默认配置文件路径 */
 	private static final String properties = "code-helper.properties";
+	private static final String saveProperties = "./code-helper.properties";
 
 	private static final String SQL_TEMPLATE = "sql_template.xml";
 
@@ -122,7 +124,13 @@ public class CodeHelper {
 	 */
 	private void init() throws Exception {
 		Properties p = new Properties();
-		String text = Util.read(properties);
+		File file = new File(saveProperties);
+		String text;
+		if (file.exists()) {
+			text = Util.read(file);
+		} else {
+			text = Util.read(properties);
+		}
 		p.load(new StringReader(text));
 		driverField.setText(p.getProperty("driver"));
 		urlField.setText(p.getProperty("url"));
@@ -272,7 +280,7 @@ public class CodeHelper {
 		p.put("author", authorField.getText());
 		String database = Util.matchs(p.getProperty("url"), ":\\d+/(\\S+)\\?", 1).get(0); // 匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。
 		p.put("database", database);
-		FileWriter writer = new FileWriter(CodeHelper.class.getResource(properties).getFile());
+		FileWriter writer = new FileWriter(saveProperties);
 		p.store(writer, "");
 		writer.close();
 		List<Column> columns = getColumns(p, tableField.getText());
@@ -318,7 +326,8 @@ public class CodeHelper {
 		String resultTemplate = Util.matchs(xml, "<resultEntry>([\\w\\W]+?)</resultEntry>", 1).get(0);
 		String ifTemplate = Util.matchs(xml, "<ifEntry>([\\w\\W]+?)</ifEntry>", 1).get(0);
 		String valueTemplate = Util.matchs(xml, "<valueEntry>([\\w\\W]+?)</valueEntry>", 1).get(0);
-		String useuseGeneratedKeyTemplate = Util.matchs(xml, "<useuseGeneratedKeys>([\\w\\W]+?)</useuseGeneratedKeys>", 1).get(0);
+		String useuseGeneratedKeyTemplate = Util
+				.matchs(xml, "<useuseGeneratedKeys>([\\w\\W]+?)</useuseGeneratedKeys>", 1).get(0);
 		List<String> excludeIdCols = new ArrayList<String>();
 		List<String> idCols = new ArrayList<String>();
 		List<String> excludeIdVals = new ArrayList<String>();

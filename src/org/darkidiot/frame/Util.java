@@ -7,6 +7,8 @@
  */
 package org.darkidiot.frame;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -24,12 +26,12 @@ import java.util.regex.Pattern;
  * 工具类
  * 
  * @author darkidiot
- * @version 1.0 
+ * @version 1.0
  */
 public class Util {
-	/**字符编码*/
+	/** 字符编码 */
 	private static final String CHARSET = "UTF-8";
-	
+
 	/** 格式化日期 */
 	public static String format(Date date) {
 		if (date == null) {
@@ -137,7 +139,7 @@ public class Util {
 		}
 		return s.toString();
 	}
-	
+
 	/**
 	 * 判断字符串是否为Null或trim后长度为0
 	 * 
@@ -175,6 +177,34 @@ public class Util {
 		InputStreamReader reader = null;
 		try {
 			in = CodeHelper.class.getResourceAsStream(file);
+			reader = new InputStreamReader(in, CHARSET);
+			StringWriter writer = new StringWriter();
+			int len = -1;
+			char[] buffer = new char[128];
+			while ((len = reader.read(buffer)) != -1) {
+				writer.write(buffer, 0, len);
+			}
+			writer.flush();
+			return writer.toString();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+	}
+
+	/**
+	 * 读取文件
+	 * 
+	 * @author DarkIdiot
+	 * @param file
+	 *            文件
+	 * @return 文件内容
+	 */
+	public static String read(File file) throws Exception {
+		InputStream in = null;
+		InputStreamReader reader = null;
+		try {
+			in = new FileInputStream(file);
 			reader = new InputStreamReader(in, CHARSET);
 			StringWriter writer = new StringWriter();
 			int len = -1;
