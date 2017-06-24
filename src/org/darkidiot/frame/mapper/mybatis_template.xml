@@ -125,7 +125,7 @@
 	</delete>
 </mapper>
 
-<resultEntry><#Entry# property="#EntryValue#" column="#EntryKey#"/></resultEntry>
+<resultEntry><#Entry# property="#EntryKey#" column="#EntryValue#"/></resultEntry>
 		
 <ifEntry><if test="#EntryValue# != null"> #preJoiner# #EntryKey# = #{#EntryValue#} #sufJoiner#</if></ifEntry>
 
