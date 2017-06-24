@@ -634,6 +634,5 @@ public class CodeHelper {
 	 */
 	public static void main(String[] args) throws Exception {
 		new CodeHelper();
-
 	}
 }

@@ -174,7 +174,7 @@ public class Util {
 		InputStream in = null;
 		InputStreamReader reader = null;
 		try {
-			in = CodeHelper.class.getResource(file).openStream();
+			in = CodeHelper.class.getResourceAsStream(file);
 			reader = new InputStreamReader(in, CHARSET);
 			StringWriter writer = new StringWriter();
 			int len = -1;
