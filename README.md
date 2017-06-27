@@ -11,6 +11,9 @@
 
 # Usage:
 ```java
-	java -jar ./dist/CodeHelper.jar
+
+	git clone https://git.oschina.net/darkidiot/CodeHelper.git
+	java -jar ./CodeHelper/dist/CodeHelper.jar
+	
 ```
 ### End
