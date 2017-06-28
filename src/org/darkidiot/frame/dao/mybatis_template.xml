@@ -78,7 +78,7 @@
 		LIMIT #{offset},#{limit}
 	</select>
 	
-	<select id="pagingCount" parameterType="java.util.Map" resultMap="java.lang.Integer">
+	<select id="pagingCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT
 			count(*)
 		FROM
