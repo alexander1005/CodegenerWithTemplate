@@ -338,14 +338,14 @@ public class CodeHelper {
 		for (int i = 0; i < columns.size(); i++) {
 			Column c = columns.get(i);
 			if (c.IsPrikey()) {
-				idCols.add(c.getField());
-				idVals.add(valueTemplate.replace("#value#", c.getName()));
+				idCols.add(c.getName());
+				idVals.add(valueTemplate.replace("#value#", c.getField()));
 				if (c.IsAutoIncrement()) {
 					useuseGeneratedKeys.append(useuseGeneratedKeyTemplate.replace("#" + "id" + "#", c.getField()));
 				}
 			} else {
-				excludeIdCols.add(c.getField());
-				excludeIdVals.add(valueTemplate.replace("#value#", c.getName()));
+				excludeIdCols.add(c.getName());
+				excludeIdVals.add(valueTemplate.replace("#value#", c.getField()));
 			}
 			String template = resultTemplate.replace("#class.package#", table.getName()).replaceAll("#class.name#",
 					className);
