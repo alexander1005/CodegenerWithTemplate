@@ -340,12 +340,14 @@ public class CodeHelper {
 			if (c.IsPrikey()) {
 				idCols.add(c.getName());
 				idVals.add(valueTemplate.replace("#value#", c.getField()));
+				itemValsAll.add(valueTemplate.replace("#value#", "item." + c.getField()));
 				if (c.IsAutoIncrement()) {
 					useuseGeneratedKeys.append(useuseGeneratedKeyTemplate.replace("#" + "id" + "#", c.getField()));
 				}
 			} else {
 				excludeIdCols.add(c.getName());
 				excludeIdVals.add(valueTemplate.replace("#value#", c.getField()));
+				itemValsAll.add(valueTemplate.replace("#value#", "item." + c.getField()));
 			}
 			String template = resultTemplate.replace("#class.package#", table.getName()).replaceAll("#class.name#",
 					className);
@@ -358,8 +360,6 @@ public class CodeHelper {
 			}
 			mappings.add(template);
 		}
-		itemValsAll.addAll(idVals);
-		itemValsAll.addAll(excludeIdVals);
 		List<String> andIfEntrys = new ArrayList<String>();
 		List<String> commaIfEntrys = new ArrayList<String>();
 		for (Column c : columns) {

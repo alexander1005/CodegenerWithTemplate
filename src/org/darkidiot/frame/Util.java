@@ -139,7 +139,7 @@ public class Util {
 		}
 		return s.toString();
 	}
-
+	
 	/**
 	 * 判断字符串是否为Null或trim后长度为0
 	 * 
