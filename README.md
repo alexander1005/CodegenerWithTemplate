@@ -70,5 +70,5 @@
 	</delete>	
 </mapper>
 ```
-#### You can modify above code for create your 
+#### You can modify above code for generate any code on the basis of your mind.
 # End
