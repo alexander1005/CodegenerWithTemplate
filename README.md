@@ -50,7 +50,7 @@
 		WHERE #id# = #{id}
 	</select>
 	... ... ...
-	<insert id="create" parameterType="#class.package#.model.#class.name#" #useuseGeneratedKey#>
+	<insert id="create" parameterType="#class.package#.model.#class.name#">
 	    INSERT INTO 
 	    <include refid="tb" /> (<include refid="cols_all"/>)
 	    VALUES(<include refid="vals_all"/>)
