@@ -12,7 +12,7 @@
 ### Usage:
 ```java
     git clone https://git.oschina.net/darkidiot/CodeHelper.git
-	java -jar ./CodeHelper/dist/CodeHelper.jar
+    java -jar ./CodeHelper/dist/CodeHelper.jar
 ```
 # How to Customize Your own CodeHelper?
 
@@ -70,4 +70,5 @@
 	</delete>	
 </mapper>
 ```
+#### You can modify above code for create your 
 # End
