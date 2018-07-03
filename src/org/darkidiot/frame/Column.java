@@ -100,6 +100,23 @@ public class Column {
 		return "unknown";
 	}
 
+	public String getMybatisFieldType() {
+		type = type.toLowerCase();
+		if (type.contains("varchar") || type.contains("text") || type.contains("char")) {
+			return "string";
+		} else if (type.equals("int") || type.equals("tinyint")) {
+			return "int";
+		} else if (type.contains("bigint") || type.contains("long") || type.contains("number")) {
+			return "long";
+		} else if (type.contains("double")) {
+			return "double";
+		} else if (type.contains("date") || type.contains("time")) {
+			return "java.sql.Date";
+		} else if (type.contains("decimal")) {
+            return "java.math.BigDecimal";
+        }
+		return "unknown";
+	}
 	public String getImport() {
 		if (type.contains("date") || type.contains("time")) {
 			return "java.util.Date";

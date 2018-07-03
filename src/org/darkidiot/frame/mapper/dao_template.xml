@@ -26,9 +26,9 @@ import #class.package#.model.#class.name#;
 @Mapper
 public interface #class.name#Mapper{
 
-	#class.name# load(@Param("id")Long id);
+	#class.name# load(@Param("id")#param.id_type# id);
 	
-	List<#class.name#> loads(@Param("ids")List<Long> ids);
+	List<#class.name#> loads(@Param("ids")List<#param.id_type#> ids);
 	
 	List<#class.name#> list(Map<String, Object> criteria);
 
@@ -44,8 +44,8 @@ public interface #class.name#Mapper{
 	
 	Integer update(#class.name# bean);
 
-	Integer delete(@Param("id")Long id);
+	Integer delete(@Param("id")#param.id_type# id);
 	
-	Integer deletes(@Param("ids")List<Long> ids);
+	Integer deletes(@Param("ids")List<#param.id_type#> ids);
 }
 </class>

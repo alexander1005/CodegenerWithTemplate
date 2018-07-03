@@ -34,13 +34,13 @@ public class #class.name#ServiceImpl implements #class.name#Service{
 	private #class.name#Mapper baseMapper;
 	
 	@Override
-	public #class.name# load(Long id){
+	public #class.name# load(#param.id_type# id){
 		return baseMapper.load(id);
 		 
 	}
 	
 	@Override
-	public List<#class.name#> loads(List<Long> ids) {
+	public List<#class.name#> loads(List<#param.id_type#> ids) {
 		return baseMapper.loads(ids);
 	}
 
@@ -101,12 +101,12 @@ public class #class.name#ServiceImpl implements #class.name#Service{
 	}
 
 	@Override
-	public Integer delete(Long id) {
+	public Integer delete(#param.id_type# id) {
 		return baseMapper.delete(id);
 	}
 
 	@Override
-	public Integer deletes(List<Long> ids) {
+	public Integer deletes(List<#param.id_type#> ids) {
 		return baseMapper.deletes(ids);
 	}
 }

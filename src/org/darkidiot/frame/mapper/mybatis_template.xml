@@ -32,7 +32,7 @@
 		#andIfEntrys#
 	</sql>
 
-	<select id="load" parameterType="long" resultMap="BaseResultMap">
+	<select id="load" parameterType="#param.id_type#" resultMap="BaseResultMap">
 		SELECT
 		<include refid="cols_all" />
 		FROM
@@ -111,7 +111,7 @@
 	    WHERE #id# = #idVal#
 	</update>
 	
-	<delete id="delete" parameterType="long">
+	<delete id="delete" parameterType="#param.id_type#">
 		DELETE FROM <include refid="tb" />
 		WHERE #id# = #{id}
 	</delete>

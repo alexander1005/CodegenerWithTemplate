@@ -28,11 +28,11 @@ import #class.package#.model.#class.name#;
 @Repository
 public class #class.name#Dao extends SqlSessionDaoSupport{
 
-	public #class.name# load(Long id){
+	public #class.name# load(#param.id_type# id){
 		return this.getSqlSession().selectOne(getNamespace()+"load", id);
 	}
 	
-	public List<#class.name#> loads(List<Long> ids) {
+	public List<#class.name#> loads(List<#param.id_type#> ids) {
 		return this.getSqlSession().selectList(getNamespace()+".loads", ids);
 	}
 	
@@ -84,11 +84,11 @@ public class #class.name#Dao extends SqlSessionDaoSupport{
 		return this.getSqlSession().update(getNamespace()+".update", bean);
 	}
 
-	public Integer delete(Long id){
+	public Integer delete(#param.id_type# id){
 		return this.getSqlSession().delete(getNamespace()+".delete", id);
 	}
 	
-	public Integer deletes(List<Long> ids) {
+	public Integer deletes(List<#param.id_type#> ids) {
 		return this.getSqlSession().delete(getNamespace()+".deletes", ids);
 	}
 	

@@ -25,14 +25,14 @@ public interface #class.name#Service{
 	 * @param id 主键ID
 	 * @return #class.name# #table.desc#
 	 */
-	#class.name# load(Long id);
+	#class.name# load(#param.id_type# id);
 	
 	/**
 	 * 依据ID批量加载 #table.desc#
 	 * @param ids 主键ID数组
 	 * @return List<#class.name#> #table.desc#
 	 */
-	List<#class.name#> loads(List<Long> ids);
+	List<#class.name#> loads(List<#param.id_type#> ids);
 	
 	/**
 	 * 依据criteria查询 #table.desc#
@@ -116,13 +116,13 @@ public interface #class.name#Service{
 	 * @param id 主键ID
 	 * @return Integer
 	 */
-	Integer delete(Long id);
+	Integer delete(#param.id_type# id);
 	
 	/**
 	 * 批量删除 #table.desc#
 	 * @param id 主键ID
 	 * @return Integer
 	 */
-	Integer deletes(List<Long> ids);
+	Integer deletes(List<#param.id_type#> ids);
 }
 </class>
