@@ -3,7 +3,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 </head>
-<mapper namespace="#class.package#.mapper.#class.name#DAO">
+<mapper namespace="#class.package#.model.#class.name#">
 	<resultMap id="BaseResultMap" type="#class.package#.model.#class.name#">
 		#columns.mapping#
 	</resultMap>
@@ -32,20 +32,20 @@
 		#andIfEntrys#
 	</sql>
 
-	<select id="selectById" parameterType="#param.id_type#" resultMap="BaseResultMap">
+	<select id="load" parameterType="#param.id_type#" resultMap="BaseResultMap">
 		SELECT
 		<include refid="cols_all" />
 		FROM
 		<include refid="tb" />
-		WHERE #id# = #{id}
+		WHERE #id# = #idVal#
 	</select>
 	
-	<select id="selectByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+	<select id="loads" parameterType="java.util.List" resultMap="BaseResultMap">
 		SELECT
 		<include refid="cols_all" />
 		FROM
 		<include refid="tb" /> WHERE #id# in
-		<foreach collection="ids" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
@@ -88,13 +88,13 @@
 		</where>
 	</select>
 	
-	<insert id="insert" parameterType="#class.package#.model.#class.name#" #useuseGeneratedKey#>
+	<insert id="create" parameterType="#class.package#.model.#class.name#" #useuseGeneratedKey#>
 	    INSERT INTO 
 	    <include refid="tb" /> (<include refid="cols_all"/>)
 	    VALUES(<include refid="vals_all"/>)
 	</insert>
 	
-	<insert id="batchInsert" parameterType="java.util.List" #useuseGeneratedKey#>
+	<insert id="creates" parameterType="java.util.List" #useuseGeneratedKey#>
 	    INSERT INTO 
 	    <include refid="tb" /> (<include refid="cols_all"/>)
 	    VALUES
@@ -113,13 +113,13 @@
 	
 	<delete id="delete" parameterType="#param.id_type#">
 		DELETE FROM <include refid="tb" />
-		WHERE #id# = #{id}
+		WHERE #id# = #idVal#
 	</delete>
 	
 	<delete id="deletes" parameterType="java.util.List">
 		DELETE FROM <include refid="tb" />
 		WHERE  #id# in
-		<foreach collection="ids" item="item" open="(" separator="," close=")">
+		<foreach collection="list" item="item" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import #class.package#.mapper.#class.name#Mapper;
+import #class.package#.service.#class.name#Service;
+import #class.package#.model.#class.name#;
+
+
+/**
+ * #table.desc# 服务实现 
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+@Service
+public class #class.name#ServiceImpl implements #class.name#Service{
+	
+	@Autowired
+	private #class.name#Mapper baseMapper;
+	
+	@Override
+	public #class.name# load(#param.id_type# id){
+		return baseMapper.load(id);
+		 
+	}
+	
+	@Override
+	public List<#class.name#> loads(List<#param.id_type#> ids) {
+		return baseMapper.loads(ids);
+	}
+
+	@Override
+	public List<#class.name#> list(Map<String, Object> criteria) {
+		return baseMapper.list(criteria);
+	}
+
+	@Override
+	public List<#class.name#> list(#class.name# bean) {
+		Map<String,Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return baseMapper.list(criteria);
+	}
+	
+	@Override
+	public List<#class.name#> listAll() {
+		return baseMapper.listAll();
+	}
+	
+	@Override
+	public List<#class.name#> pagingRow(#class.name# bean, Integer offset, Integer limit) {
+		Map<String,Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return baseMapper.pagingRow(criteria, offset, limit);
+	}
+
+	@Override
+	public Integer pagingCount(#class.name# bean) {
+		Map<String,Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return baseMapper.pagingCount(criteria);
+	}
+
+	@Override
+	public List<#class.name#> pagingRow(Map<String, Object> criteria, Integer offset, Integer limit) {
+		return baseMapper.pagingRow(criteria, offset, limit);
+	}
+
+	@Override
+	public Integer pagingCount(Map<String, Object> criteria) {
+		return baseMapper.pagingCount(criteria);
+	}
+	
+	@Override
+	public Integer create(#class.name# bean) {
+		return baseMapper.create(bean);
+	}
+
+	@Override
+	public Integer creates(List<#class.name#> beans) {
+		return baseMapper.creates(beans);
+	}
+
+	@Override
+	public Integer update(#class.name# bean) {
+		return baseMapper.update(bean);
+	}
+
+	@Override
+	public Integer delete(#param.id_type# id) {
+		return baseMapper.delete(id);
+	}
+
+	@Override
+	public Integer deletes(List<#param.id_type#> ids) {
+		return baseMapper.deletes(ids);
+	}
+}
+</class>

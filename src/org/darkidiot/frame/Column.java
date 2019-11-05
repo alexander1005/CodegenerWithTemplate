@@ -87,7 +87,7 @@ public class Column {
 		if (type.contains("varchar") || type.contains("text") || type.contains("char")) {
 			return "String";
 		} else if (type.equals("int") || type.equals("tinyint")) {
-			return "Integer";
+			return "Int";
 		} else if (type.contains("bigint") || type.contains("long") || type.contains("number")) {
 			return "Long";
 		} else if (type.contains("double")) {

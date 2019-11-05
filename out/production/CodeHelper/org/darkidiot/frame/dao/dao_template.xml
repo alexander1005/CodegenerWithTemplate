@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class>
+/* 
+ * CreateDate #now#
+ *
+ * Email ：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#.dao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Repository;
+
+import #class.package#.model.#class.name#;
+
+/**
+ * #table.desc# Dao服务
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+@Repository
+public class #class.name#Dao extends SqlSessionDaoSupport{
+
+	public #class.name# load(#param.id_type# id){
+		return this.getSqlSession().selectOne(getNamespace()+"load", id);
+	}
+	
+	public List<#class.name#> loads(List<#param.id_type#> ids) {
+		return this.getSqlSession().selectList(getNamespace()+".loads", ids);
+	}
+	
+	public List<#class.name#> list(Map<String, Object> criteria) {
+		return this.getSqlSession().selectList(getNamespace()+".list", criteria);
+	}
+
+	public List<#class.name#> list(SupermanOuterSeller bean) {
+		Map<String,Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return this.list(criteria);
+	}
+
+	public List<#class.name#> listAll() {
+		return this.getSqlSession().selectList(getNamespace()+".listAll");
+	}
+
+	public List<#class.name#> pagingRow(#class.name# bean, Integer offset, Integer limit) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return this.pagingRow(criteria, offset, limit);
+	}
+
+	public Integer pagingCount(#class.name# bean) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		BeanUtils.copyProperties(bean, criteria);
+		return this.pagingCount(criteria);
+	}
+
+	public List<#class.name#> pagingRow(Map<String, Object> criteria, Integer offset, Integer limit) {
+		criteria.put("offset", offset);
+		criteria.put("limit", limit);
+		return this.getSqlSession().selectList(getNamespace() + ".pagingRow", criteria);
+	}
+
+	public Integer pagingCount(Map<String, Object> criteria) {
+		return this.getSqlSession().selectOne(getNamespace() + ".pagingCount", criteria);
+	}
+	
+	public Integer create(#class.name# bean){
+		return this.getSqlSession().insert(getNamespace()+".create", bean);
+	}
+
+	public Integer creates(List<#class.name#> beanList){
+		return this.getSqlSession().insert(getNamespace()+".creates", beanList);
+	}
+	
+	public Integer update(#class.name# bean){
+		return this.getSqlSession().update(getNamespace()+".update", bean);
+	}
+
+	public Integer delete(#param.id_type# id){
+		return this.getSqlSession().delete(getNamespace()+".delete", id);
+	}
+	
+	public Integer deletes(List<#param.id_type#> ids) {
+		return this.getSqlSession().delete(getNamespace()+".deletes", ids);
+	}
+	
+	private String getNamespace() {
+		return "#class.package#.model.#class.name#"+".";
+	}
+}
+</class>

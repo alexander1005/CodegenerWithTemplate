@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<domain>
+<class>
+/* 
+ * CreateDate: #now#
+ *
+ * Email：darkidiot@icloud.com 
+ * School：CUIT 
+ * Copyright For darkidiot
+ */
+package #class.package#.model;
+
+import java.io.Serializable;
+import lombok.Data;
+#imports#
+/**
+ * #table.desc#
+ * 
+ * @author #author#
+ * @version 1.0
+ */
+@Data
+public class #class.name# implements Serializable {
+	private static final long serialVersionUID = #serialVersionUID#L;
+	#fields#
+}
+</class>
+<import>import #import#;</import>	
+	<field>
+	/** #field.name#:#field.desc# */
+	private #field.type# #field.name#;
+	</field>
+	
+	<method>
+	/** 取得#field.desc# */
+	public #field.type# #method.get#() {
+		return #field.name#;
+	}
+	
+	/** 设置#field.desc# */
+	public void #method.set#(#field.type# #field.name#) {
+		this.#field.name# = #field.name#;
+	}
+	</method>
+</domain>
